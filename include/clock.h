@@ -14,33 +14,16 @@
  *
  */
 
-#include "test_app.h"
+#ifndef CLOCK_H
+#define CLOCK_H
 
+#include "sd_protocol.h"
+#include "uwb_comm.h"
 
-THD_FUNCTION(TEST_APP, arg)
-{
-	(void) arg;
+extern int32_t clock_time;
+extern int32_t control;
+extern int32_t cont;
 
-	chThdSleepMilliseconds(200);
+extern THD_FUNCTION(CLOCK, arg);
 
-	dw_addr_t self_addr = dw_get_addr();
-
-	dw_addr_t source = 1955;
-	dw_addr_t tag = 3213;
-
-	dw_recv_info_t dw_recv_info;
-
-	float distance = 0.0;
-	uint32_t cnt = 0;
-
-	while(true)
-	{
-		distance = 0.0;
-		if (self_addr == source)
-			dw_recv_tmo(NULL, NULL, 0, TIME_MS2I(1000));
-		else if (self_addr == tag)
-			dw_recv_info = dw_sstwr(source, NULL, 0, (uint8_t*)(&distance), sizeof(distance));
-		chThdSleepMilliseconds(60);
-		chprintf((BaseSequentialStream*)&SD1, "%fm\n", distance);
-	}
-}
+#endif /* CLOCK_H */

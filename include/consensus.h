@@ -14,12 +14,19 @@
  *
  */
 
-#ifndef TEST_APP_H
-#define TEST_APP_H
+#ifndef CONSENSUS_H
+#define CONSENSUS_H
 
 #include "sd_protocol.h"
 #include "uwb_comm.h"
 
-extern THD_FUNCTION(TEST_APP, arg);
+extern int32_t clock_time;
+extern int32_t control;
+extern int32_t neighbordiff_curr_time;
+extern int32_t neighbordiff_last_time;
+extern int32_t cont;
 
-#endif /* TEST_APP_H */
+
+extern THD_FUNCTION(CONSENSUS, arg);
+
+#endif /* CONSENSUS_H */

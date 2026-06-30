@@ -30,6 +30,8 @@
 
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_7_0_
+#define CHPRINTF_USE_LONG_LONG TRUE
+
 
 /*===========================================================================*/
 /**

@@ -186,7 +186,7 @@ dw_recv_info_t dw_recv_tmo(dw_addr_t* addr, uint8_t* recv_data, size_t size, sys
 
 	dw_recv_info.state = res->state;
 	dw_recv_info.rx_time = res->rx_time;
-
+	
 	if (res->recvd_size >= sizeof(header))
 	{
 		header = decode_MHR(res->recv_buf);

@@ -100,6 +100,39 @@ This project is a **WIP** so much of the functionality is still in development, 
 
 Many distributed algorithms that rely on wireless communication between separate devices could be implemented using this platform, here are some examples we have begun working on and testing:
 
+### Distributed clock synchronization (PI consensus)
+
+This application synchronizes the **logical clocks** of the nodes in a distributed
+UWB network using a **proportional-integral (PI) consensus control law**. Each node
+maintains a logical clock and periodically exchanges its timestamp with its
+neighbours over UWB. The control law drives the pairwise clock differences toward
+zero, achieving network-wide synchronization without any external time reference.
+
+The application layer consists of three files:
+
+| File          | Role |
+|---------------|------|
+| `clock.c`     | Logical-clock thread. A virtual timer fires every 1 ms, on each tick the clock advances by `skew + control`. |
+| `consensus.c` | Consensus thread. Exchanges timestamps over UWB and computes the PI control law. |
+| `main.c`      | System initialization, global clock variables, and thread creation. |
+
+The control law applied at each node is
+
+$$u(k) = -K_p\, x(k) - w(k), \qquad w(k) = w(k-1) + K_i\, x(k-1)\, \Delta t$$
+
+where $x(k)$ is the local–neighbour clock difference, $w(k)$ is the integral state,
+and $\Delta t$ is the number of clock ticks elapsed since the last iteration. Control is
+enabled only after the first valid neighbour timestamp is received, and an integrator
+deadband is used to prevent windup. Default gains are $K_p = 0.5$, $K_i = 0.0001$.
+
+Each node logs its state over UART (six columns: `time  neighbour  x(k)  u(k)  w(k)  cont`),
+which can be analyzed with the accompanying Python scripts.
+
+_This application was developed as part of the TFM "Sincronización temporal en redes
+UWB distribuidas mediante rigidez de relojes" (Máster en Ciencia de Datos e Ingeniería
+de Computadores, Universidad de Granada). A companion repository contains the Python
+simulations of the PI consensus law and the clock-rigidity framework: [simulation](https://github.com/angelolmn/simulation_UWB_synchronization)._
+
 ### Distributed localization for robot swarms
 
 ![dist-loc](docs/assets/dis_loc.gif)
@@ -118,9 +151,6 @@ _Centroid estimation consensus algorithm, EXECUTED ON SIMULATION [Source](https:
 
 This centroid estimation, can be implemented on real hardware using the communication API and creating an application which implements the algorithm's calculations and information exchange between devices.
 
-## Anything you can think of
-
-Using this platform a huge number of distributed algorithms can be implemented such as **clock synchronization**...
 
 ### Built With
 

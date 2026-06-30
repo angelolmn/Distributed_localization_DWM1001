@@ -61,3 +61,6 @@ build/
 
 # Data files
 *.csv
+
+# Help file
+notas.md 
